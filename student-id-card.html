@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawamu School - Student ID Card</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F0F5E6; }
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #8DB600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo img { height: 45px; }
+        .logo-text h1 { color: #8DB600; font-size: 22px; margin: 0; }
+        .logo-text p { color: #666; font-size: 10px; margin: 0; }
+        .back-btn { background: #8DB600; color: white; padding: 8px 20px; border-radius: 5px; text-decoration: none; }
+        .back-btn:hover { background: #6B8E00; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .id-generator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .form-card, .card-preview {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-title { color: #8DB600; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #8DB600; }
+        .btn-generate {
+            background: #8DB600;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-generate:hover { background: #6B8E00; }
+        .id-card {
+            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #8DB600;
+        }
+        .student-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .student-details { font-size: 13px; margin-top: 15px; text-align: left; }
+        .student-details p { margin: 5px 0; }
+        .btn-print {
+            background: white;
+            color: #8DB600;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .btn-print:hover { background: #F0F5E6; }
+        @media print {
+            .header, .form-card, .btn-print { display: none; }
+            .card-preview { margin: 0; padding: 0; box-shadow: none; }
+            .id-card { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="images/Logo.png" alt="Logo">
+            <div class="logo-text"><h1>DAWAMU SCHOOL</h1><p>Transforming Boys Into Leaders</p></div>
+        </div>
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+    </div>
+    <div class="container">
+        <div class="id-generator">
+            <div class="form-card">
+                <h2 class="form-title">🪪 Student Information</h2>
+                <div class="form-group"><label>Full Name</label><input type="text" id="studentName" placeholder="Student name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" id="studentId" placeholder="e.g., STU-2024-001"></div>
+                <div class="form-group"><label>Class/Grade</label><select id="class"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option></select></div>
+                <div class="form-group"><label>Parent/Guardian</label><input type="text" id="parent" placeholder="Parent name"></div>
+                <div class="form-group"><label>Contact Number</label><input type="text" id="contact" placeholder="Phone number"></div>
+                <div class="form-group"><label>Blood Group</label><select id="bloodGroup"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+                <button class="btn-generate" onclick="generateIDCard()">Generate ID Card</button>
+            </div>
+            <div class="card-preview">
+                <h2 class="form-title">🪪 ID Card Preview</h2>
+                <div class="id-card" id="idCard">
+                    <div class="avatar">👨‍🎓</div>
+                    <div class="student-name" id="displayName">Student Name</div>
+                    <div style="font-size: 11px;">Student ID Card</div>
+                    <div class="student-details">
+                        <p><strong>ID:</strong> <span id="displayId">------</span></p>
+                        <p><strong>Class:</strong> <span id="displayClass">------</span></p>
+                        <p><strong>Parent:</strong> <span id="displayParent">------</span></p>
+                        <p><strong>Contact:</strong> <span id="displayContact">------</span></p>
+                        <p><strong>Blood:</strong> <span id="displayBlood">------</span></p>
+                    </div>
+                </div>
+                <button class="btn-print" onclick="printIDCard()">🖨️ Print ID Card</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function generateIDCard() {
+            document.getElementById('displayName').innerText = document.getElementById('studentName').value || 'Not Provided';
+            document.getElementById('displayId').innerText = document.getElementById('studentId').value || 'Not Provided';
+            document.getElementById('displayClass').innerText = document.getElementById('class').value;
+            document.getElementById('displayParent').innerText = document.getElementById('parent').value || 'Not Provided';
+            document.getElementById('displayContact').innerText = document.getElementById('contact').value || 'Not Provided';
+            document.getElementById('displayBlood').innerText = document.getElementById('bloodGroup').value;
+        }
+        function printIDCard() { window.print(); }
+        // Load saved data if any
+        if(localStorage.getItem('lastStudentId')) {
+            document.getElementById('studentName').value = localStorage.getItem('lastStudentName') || '';
+            document.getElementById('studentId').value = localStorage.getItem('lastStudentId') || '';
+            document.getElementById('parent').value = localStorage.getItem('lastParent') || '';
+            generateIDCard();
+        }
+        function saveToLocal() {
+            localStorage.setItem('lastStudentName', document.getElementById('studentName').value);
+            localStorage.setItem('lastStudentId', document.getElementById('studentId').value);
+            localStorage.setItem('lastParent', document.getElementById('parent').value);
+        }
+        document.getElementById('studentName').addEventListener('change', saveToLocal);
+        document.getElementById('studentId').addEventListener('change', saveToLocal);
+        document.getElementById('parent').addEventListener('change', saveToLocal);
+    </script>
+</body>
+</html>

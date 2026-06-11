@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawamu School - Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F0F5E6; }
+        .header {
+            background: #FFFFFF;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #8DB600;
+        }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo img { height: 50px; width: auto; }
+        .logo-text h1 { color: #8DB600; font-size: 24px; margin: 0; }
+        .logo-text p { color: #666; font-size: 12px; margin: 0; }
+        .user-info { display: flex; align-items: center; gap: 20px; }
+        .logout-btn {
+            background: #8DB600;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-btn:hover { background: #6B8E00; }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-left: 5px solid #8DB600;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h3 { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .stat-number { font-size: 36px; font-weight: bold; color: #8DB600; margin-bottom: 10px; }
+        .more-info { color: #8DB600; text-decoration: none; font-size: 12px; }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chart-card h3 { margin-bottom: 20px; color: #333; }
+        canvas { max-height: 300px; }
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .management-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #8DB600;
+        }
+        .management-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(141,182,0,0.2);
+        }
+        .management-card h4 { color: #8DB600; margin-bottom: 5px; }
+        .management-card p { color: #666; font-size: 12px; }
+        .footer { text-align: center; padding: 20px; color: #666; margin-top: 30px; border-top: 1px solid #ddd; }
+        .footer .tagline { color: #8DB600; font-weight: bold; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="images/Logo.png" alt="Dawamu School Logo">
+            <div class="logo-text">
+                <h1>DAWAMU SCHOOL</h1>
+                <p>Transforming Boys Into Leaders</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <span id="userEmail">admin@dawamu.com</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Total Students</h3><div class="stat-number" id="totalStudents">0</div><a href="#" class="more-info">More Info →</a></div>
+            <div class="stat-card"><h3>Total Staff</h3><div class="stat-number" id="totalStaff">0</div><a href="#" class="more-info">More Info →</a></div>
+            <div class="stat-card"><h3>Today Total Present</h3><div class="stat-number" id="totalPresent">0</div><a href="#" class="more-info">More Info →</a></div>
+            <div class="stat-card"><h3>Today Subjects</h3><div class="stat-number" id="todaySubjects">0</div><a href="#" class="more-info">More Info →</a></div>
+        </div>
+        <div class="charts-grid">
+            <div class="chart-card"><h3>📊 Dashboard Statistics</h3><canvas id="statsChart"></canvas></div>
+            <div class="chart-card"><h3>✅ Today's Attendance</h3><canvas id="attendanceChart"></canvas></div>
+            <div class="chart-card"><h3>👥 Staff vs Students</h3><canvas id="pieChart"></canvas></div>
+        </div>
+        <div class="management-grid">
+            <div class="management-card" onclick="window.location.href='manage-subject.html'"><h4>📚 Manage Subject</h4><p>Add/Edit subjects</p></div>
+            <div class="management-card" onclick="window.location.href='manage-bill.html'"><h4>💰 Manage Bill</h4><p>Fee management</p></div>
+            <div class="management-card" onclick="window.location.href='manage-library.html'"><h4>📖 Manage Library</h4><p>Books & records</p></div>
+            <div class="management-card" onclick="window.location.href='manage-newspaper.html'"><h4>📰 Manage Newspaper</h4><p>Daily updates</p></div>
+            <div class="management-card" onclick="window.location.href='manage-leaves.html'"><h4>🌿 Manage Leaves</h4><p>Leave requests</p></div>
+            <div class="management-card" onclick="window.location.href='student-id-card.html'"><h4>🪪 Student ID Card</h4><p>Generate ID cards</p></div>
+            <div class="management-card" onclick="window.location.href='staff-id-card.html'"><h4>👨‍🏫 Staff ID Card</h4><p>Generate ID cards</p></div>
+        </div>
+        <div class="footer"><p>Dawamu School Management System</p><div class="tagline">"Transforming Boys Into Leaders"</div></div>
+    </div>
+    <script>
+        function checkLogin() {
+            if (!localStorage.getItem('isLoggedIn')) window.location.href = 'index.html';
+        }
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+        function animateNumber(id, start, end, duration) {
+            const el = document.getElementById(id);
+            const range = end - start;
+            const increment = range / (duration / 10);
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) { el.textContent = end; clearInterval(timer); }
+                else { el.textContent = Math.floor(current); }
+            }, 10);
+        }
+        function updateStats() {
+            animateNumber('totalStudents', 0, 1250, 2000);
+            animateNumber('totalStaff', 0, 85, 2000);
+            animateNumber('totalPresent', 0, 1180, 2000);
+            animateNumber('todaySubjects', 0, 8, 2000);
+            return { students: 1250, staff: 85, present: 1180 };
+        }
+        function initCharts(stats) {
+            new Chart(document.getElementById('statsChart'), { type: 'bar', data: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], datasets: [{ label: 'Count', data: [850, 920, 1100, stats.present], backgroundColor: '#8DB600' }] } });
+            new Chart(document.getElementById('attendanceChart'), { type: 'bar', data: { labels: ['Present', 'Absent'], datasets: [{ label: 'Count', data: [stats.present, stats.students - stats.present], backgroundColor: ['#8DB600', '#FF6B6B'] }] } });
+            new Chart(document.getElementById('pieChart'), { type: 'pie', data: { labels: ['Students', 'Staff'], datasets: [{ data: [stats.students, stats.staff], backgroundColor: ['#8DB600', '#6B8E00'] }] } });
+        }
+        window.onload = () => { checkLogin(); document.getElementById('userEmail').innerText = localStorage.getItem('userEmail') || 'admin@dawamu.com'; const stats = updateStats(); setTimeout(() => initCharts(stats), 2000); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawamu School - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 450px;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header img { height: 80px; margin-bottom: 15px; }
+        .login-header h1 { color: #8DB600; font-size: 28px; margin-bottom: 5px; }
+        .login-header .tagline { color: #666; font-size: 12px; letter-spacing: 1px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input:focus { outline: none; border-color: #8DB600; }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-btn:hover { transform: translateY(-2px); }
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #F0F5E6;
+            border-radius: 8px;
+            font-size: 12px;
+            text-align: center;
+            border-left: 4px solid #8DB600;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="images/Logo.png" alt="Dawamu School Logo">
+            <h1>DAWAMU SCHOOL</h1>
+            <p class="tagline">Transforming Boys Into Leaders</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="admin@dawamu.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••" required>
+            </div>
+            <button type="submit" class="login-btn">Login to Dashboard →</button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+        <div class="demo-credentials">
+            <strong>Dawamu School Portal</strong><br>
+            Email: admin@dawamu.com | Password: admin123
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            if (email === 'admin@dawamu.com' && password === 'admin123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                window.location.href = 'dashboard.html';
+            } else {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = 'Invalid email or password. Please try again.';
+                errorDiv.style.display = 'block';
+                setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
