@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawamu School - AI Remarks</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F0F5E6; }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #8DB600; padding-bottom: 20px; }
+        .logo img { height: 40px; }
+        .logo h2 { color: #8DB600; font-size: 18px; }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+        }
+        .nav-item:hover, .nav-item.active { background: #8DB600; color: white; }
+        
+        .main-content { margin-left: 260px; padding: 20px; }
+        
+        .header {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header h2 { color: #8DB600; }
+        .logout-btn { background: #f44336; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .ai-generator {
+            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            color: white;
+        }
+        
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .generate-btn {
+            background: white;
+            color: #8DB600;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .remark-card {
+            background: #F0F5E6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #8DB600;
+        }
+        
+        .save-btn { background: #8DB600; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="images/Logo.png" alt="Logo">
+            <div><h2>DAWAMU SCHOOL</h2><p>Transforming Boys Into Leaders</p></div>
+        </div>
+        <a href="teacher-dashboard.html" class="nav-item"><span>📊</span> <span>Dashboard</span></a>
+        <a href="teacher-students.html" class="nav-item"><span>👨‍🎓</span> <span>My Students</span></a>
+        <a href="teacher-remarks.html" class="nav-item active"><span>💬</span> <span>AI Remarks</span></a>
+        <a href="teacher-exams.html" class="nav-item"><span>📝</span> <span>Exam Results</span></a>
+        <a href="teacher-attendance.html" class="nav-item"><span>✅</span> <span>Attendance</span></a>
+        <a href="teacher-assignments.html" class="nav-item"><span>📚</span> <span>Assignments</span></a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h2>💬 AI-Powered Student Remarks</h2>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        
+        <div class="ai-generator">
+            <h3>🤖 Generate AI Remark</h3>
+            <select id="studentSelect">
+                <option>James Mwangi</option><option>Brian Otieno</option><option>Alex Kimani</option><option>Michael Omondi</option>
+            </select>
+            <select id="performanceSelect">
+                <option>Excellent - Outstanding performance</option>
+                <option>Good - Above average</option>
+                <option>Satisfactory - Meeting expectations</option>
+                <option>Needs Improvement - Below average</option>
+            </select>
+            <textarea id="customPrompt" rows="2" placeholder="Optional: Add specific notes about the student..."></textarea>
+            <button class="generate-btn" onclick="generateRemark()">✨ Generate AI Remark</button>
+        </div>
+        
+        <div class="card">
+            <h3 style="margin-bottom: 15px;">📋 Generated Remarks</h3>
+            <div id="remarksList"></div>
+        </div>
+    </div>
+    
+    <script>
+        let remarks = JSON.parse(localStorage.getItem('teacherRemarks')) || [];
+        
+        const remarkTemplates = {
+            "Excellent": "{name} has demonstrated exceptional academic performance this term. Their dedication and hard work are commendable. Keep up the great work!",
+            "Good": "{name} has shown consistent improvement and good understanding of the subjects. With continued effort, even better results are achievable.",
+            "Satisfactory": "{name} is meeting the expected learning outcomes. We encourage more participation and consistent revision for better performance.",
+            "Needs Improvement": "{name} needs to focus more on their studies. Regular revision and completing assignments on time will help improve their grades."
+        };
+        
+        function generateRemark() {
+            const student = document.getElementById('studentSelect').value;
+            const performance = document.getElementById('performanceSelect').value;
+            const customNote = document.getElementById('customPrompt').value;
+            
+            let remarkType = "";
+            if(performance.includes("Excellent")) remarkType = "Excellent";
+            else if(performance.includes("Good")) remarkType = "Good";
+            else if(performance.includes("Satisfactory")) remarkType = "Satisfactory";
+            else remarkType = "Needs Improvement";
+            
+            let remark = remarkTemplates[remarkType].replace("{name}", student);
+            if(customNote) remark += " " + customNote;
+            
+            remarks.unshift({ student, remark, date: new Date().toISOString().split('T')[0] });
+            localStorage.setItem('teacherRemarks', JSON.stringify(remarks));
+            displayRemarks();
+            document.getElementById('customPrompt').value = '';
+        }
+        
+        function displayRemarks() {
+            const container = document.getElementById('remarksList');
+            if(remarks.length === 0) {
+                container.innerHTML = '<p style="color:#666; text-align:center">No remarks generated yet. Use the AI tool above.</p>';
+                return;
+            }
+            container.innerHTML = '';
+            remarks.forEach((r, i) => {
+                container.innerHTML += `
+                    <div class="remark-card">
+                        <strong>${r.student}</strong> - ${r.date}<br>
+                        <p style="margin-top:10px">${r.remark}</p>
+                        <button class="save-btn" onclick="deleteRemark(${i})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+        
+        function deleteRemark(i) { remarks.splice(i, 1); localStorage.setItem('teacherRemarks', JSON.stringify(remarks)); displayRemarks(); }
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const portal = localStorage.getItem('userPortal');
+            if (!isLoggedIn || portal !== 'teacher') window.location.href = 'index.html';
+        }
+        
+        window.onload = () => { checkLogin(); displayRemarks(); };
+    </script>
+</body>
+</html>

@@ -3,115 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawamu School - Login</title>
+    <title>Dawamu School - Transforming Boys Into Leaders</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
-            min-height: 100vh;
+            background: #FFFFFF;
+            color: #333;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 15px 30px;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 45px;
+        }
+
+        .logo h1 {
+            color: #8DB600;
+            font-size: 24px;
+        }
+
+        .logo p {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #8DB600;
+        }
+
+        .login-btn {
+            background: #8DB600;
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #F0F5E6 0%, #FFFFFF 100%);
+            padding: 120px 30px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #8DB600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: #8DB600;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: white;
+        }
+
+        /* Portal Cards */
+        .portals {
+            padding: 80px 30px;
+            background: #F0F5E6;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 50px;
+        }
+
+        .section-title span {
+            color: #8DB600;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portal-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .portal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .portal-card h3 {
+            color: #8DB600;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .portal-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .portal-btn {
+            background: #8DB600;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 30px;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature h4 {
+            color: #8DB600;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .footer .tagline {
+            color: #8DB600;
+            margin-top: 10px;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
             justify-content: center;
             align-items: center;
         }
-        .login-container {
+
+        .modal-content {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 450px;
             padding: 40px;
-            animation: fadeIn 0.5s ease;
+            width: 400px;
+            text-align: center;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .login-header { text-align: center; margin-bottom: 30px; }
-        .login-header img { height: 80px; margin-bottom: 15px; }
-        .login-header h1 { color: #8DB600; font-size: 28px; margin-bottom: 5px; }
-        .login-header .tagline { color: #666; font-size: 12px; letter-spacing: 1px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
-        input {
+
+        .modal-content input {
             width: 100%;
             padding: 12px;
+            margin: 10px 0;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 14px;
         }
-        input:focus { outline: none; border-color: #8DB600; }
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #8DB600 0%, #6B8E00 100%);
+
+        .modal-content button {
+            background: #8DB600;
             color: white;
             border: none;
+            padding: 12px;
+            width: 100%;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
         }
-        .login-btn:hover { transform: translateY(-2px); }
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 15px;
-            text-align: center;
-            display: none;
-        }
-        .demo-credentials {
-            margin-top: 20px;
-            padding: 15px;
-            background: #F0F5E6;
-            border-radius: 8px;
-            font-size: 12px;
-            text-align: center;
-            border-left: 4px solid #8DB600;
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <img src="images/Logo.png" alt="Dawamu School Logo">
-            <h1>DAWAMU SCHOOL</h1>
-            <p class="tagline">Transforming Boys Into Leaders</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/Logo.png" alt="Dawamu School">
+            <div>
+                <h1>DAWAMU SCHOOL</h1>
+                <p>Transforming Boys Into Leaders</p>
+            </div>
         </div>
-        <form id="loginForm">
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="email" placeholder="admin@dawamu.com" required>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#portals">Portals</a>
+            <a href="#features">Features</a>
+            <a href="#about">About Us</a>
+            <a href="#" class="login-btn" onclick="openPortalSelector()">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            <h1>Dawamu <span>Management System</span></h1>
+            <p>Comprehensive platform for administrators, teachers, and parents. Manage grades, assignments, attendance, and student progress in one unified system.</p>
+            <button class="cta-button" onclick="openPortalSelector()">Get Started →</button>
+        </div>
+        <div class="hero-image">
+            <h2>🏫</h2>
+            <p style="margin-top: 20px;">"Transforming Boys Into Leaders"</p>
+        </div>
+    </section>
+
+    <!-- Portal Cards -->
+    <section class="portals" id="portals">
+        <h2 class="section-title">Choose Your <span>Portal</span></h2>
+        <div class="cards-grid">
+            <div class="portal-card">
+                <div class="portal-icon">👨‍💼</div>
+                <h3>Admin Portal</h3>
+                <p>Complete school management. Manage students, teachers, classes, fees, library, and view comprehensive analytics.</p>
+                <button class="portal-btn" onclick="openLogin('admin')">Login as Admin</button>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="••••••" required>
+            <div class="portal-card">
+                <div class="portal-icon">👨‍🏫</div>
+                <h3>Teacher Portal</h3>
+                <p>Efficient grade management. Input grades, create assignments, track attendance, and monitor student progress.</p>
+                <button class="portal-btn" onclick="openLogin('teacher')">Login as Teacher</button>
             </div>
-            <button type="submit" class="login-btn">Login to Dashboard →</button>
-            <div id="errorMessage" class="error-message"></div>
-        </form>
-        <div class="demo-credentials">
-            <strong>Dawamu School Portal</strong><br>
-            Email: admin@dawamu.com | Password: admin123
+            <div class="portal-card">
+                <div class="portal-icon">👨‍👩‍👧</div>
+                <h3>Parent Portal</h3>
+                <p>Track student progress. View your child's grades, assignments, attendance, and fee status with insights.</p>
+                <button class="portal-btn" onclick="openLogin('parent')">Login as Parent</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose <span>Dawamu</span></h2>
+        <div class="features-grid">
+            <div class="feature">
+                <div class="icon">🤖</div>
+                <h4>AI-Powered Reports</h4>
+                <p>Generate professional student reports using advanced AI</p>
+            </div>
+            <div class="feature">
+                <div class="icon">📊</div>
+                <h4>Real-time Analytics</h4>
+                <p>Monitor school performance with live dashboards</p>
+            </div>
+            <div class="feature">
+                <div class="icon">👥</div>
+                <h4>Multi-Role Access</h4>
+                <p>Tailored dashboards for admins, teachers, and parents</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🔒</div>
+                <h4>Data Security</h4>
+                <p>Enterprise-grade security for sensitive school data</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 Dawamu School. All rights reserved.</p>
+        <p class="tagline">"Transforming Boys Into Leaders"</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Login to Admin Portal</h2>
+            <input type="email" id="loginEmail" placeholder="Email address">
+            <input type="password" id="loginPassword" placeholder="Password">
+            <button onclick="handleLogin()">Login →</button>
+            <p style="margin-top: 15px; font-size: 12px; color: #666;">Contact school admin for credentials</p>
         </div>
     </div>
+
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            if (email === 'admin@dawamu.com' && password === 'admin123') {
+        let selectedPortal = 'admin';
+
+        function openPortalSelector() {
+            alert('Please select a portal: Admin, Teacher, or Parent from the cards below');
+        }
+
+        function openLogin(portal) {
+            selectedPortal = portal;
+            const titles = {
+                'admin': 'Login to Admin Portal',
+                'teacher': 'Login to Teacher Portal',
+                'parent': 'Login to Parent Portal'
+            };
+            document.getElementById('modalTitle').innerText = titles[portal];
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Demo credentials
+            if (selectedPortal === 'admin' && email === 'admin@dawamu.com' && password === 'admin123') {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userEmail', email);
+                localStorage.setItem('userPortal', 'admin');
                 window.location.href = 'dashboard.html';
-            } else {
-                const errorDiv = document.getElementById('errorMessage');
-                errorDiv.textContent = 'Invalid email or password. Please try again.';
-                errorDiv.style.display = 'block';
-                setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+            } 
+            else if (selectedPortal === 'teacher' && email === 'teacher@dawamu.com' && password === 'teacher123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userPortal', 'teacher');
+                window.location.href = 'teacher-dashboard.html';
             }
-        });
+            else if (selectedPortal === 'parent' && email === 'parent@dawamu.com' && password === 'parent123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userPortal', 'parent');
+                window.location.href = 'parent-dashboard.html';
+            }
+            else {
+                alert('Invalid credentials. Please try again.');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>

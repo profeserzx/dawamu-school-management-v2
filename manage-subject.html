@@ -71,21 +71,35 @@
             <div class="form-group"><label>Subject Name</label><input type="text" id="subName" placeholder="e.g., Mathematics"></div>
             <div class="form-group"><label>Subject Code</label><input type="text" id="subCode" placeholder="e.g., MATH101"></div>
             <div class="form-group"><label>Teacher</label><input type="text" id="teacher" placeholder="Teacher name"></div>
-            <div class="form-group"><label>Class/Grade</label><select id="class"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option></select></div>
+            <div class="form-group"><label>Grade/Form</label>
+                <select id="class">
+                    <optgroup label="Grades">
+                        <option>Grade 7</option>
+                        <option>Grade 8</option>
+                        <option>Grade 9</option>
+                    </optgroup>
+                    <optgroup label="Forms">
+                        <option>Form 3</option>
+                        <option>Form 4</option>
+                    </optgroup>
+                </select>
+            </div>
             <button class="btn-submit" onclick="addSubject()">Add Subject</button>
         </div>
         <div class="table-card">
             <h2 class="form-title">📖 All Subjects</h2>
             <table>
-                <thead><tr><th>Code</th><th>Subject</th><th>Teacher</th><th>Class</th><th>Actions</th></tr></thead>
+                <thead>
+                    <tr><th>Code</th><th>Subject</th><th>Teacher</th><th>Grade/Form</th><th>Actions</th></tr>
+                </thead>
                 <tbody id="subjectsList"></tbody>
             </table>
         </div>
     </div>
     <script>
         let subjects = JSON.parse(localStorage.getItem('subjects')) || [
-            { code: "MATH101", name: "Mathematics", teacher: "Mr. John Doe", class: "Grade 5" },
-            { code: "SCI201", name: "Science", teacher: "Ms. Jane Smith", class: "Grade 5" }
+            { code: "MATH101", name: "Mathematics", teacher: "Mr. John Doe", class: "Grade 8" },
+            { code: "SCI201", name: "Science", teacher: "Ms. Jane Smith", class: "Form 3" }
         ];
         function saveSubjects() { localStorage.setItem('subjects', JSON.stringify(subjects)); }
         function displaySubjects() {

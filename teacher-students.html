@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawamu School - My Students</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F0F5E6; }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #8DB600; padding-bottom: 20px; }
+        .logo img { height: 40px; }
+        .logo h2 { color: #8DB600; font-size: 18px; }
+        .logo p { font-size: 9px; color: #666; }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+        }
+        .nav-item:hover, .nav-item.active { background: #8DB600; color: white; }
+        
+        .main-content { margin-left: 260px; padding: 20px; }
+        
+        .header {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header h2 { color: #8DB600; }
+        .logout-btn { background: #f44336; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .search-bar select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #8DB600; color: white; }
+        .view-btn { background: #2196f3; color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 500px;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="images/Logo.png" alt="Logo">
+            <div><h2>DAWAMU SCHOOL</h2><p>Transforming Boys Into Leaders</p></div>
+        </div>
+        <a href="teacher-dashboard.html" class="nav-item"><span>📊</span> <span>Dashboard</span></a>
+        <a href="teacher-students.html" class="nav-item active"><span>👨‍🎓</span> <span>My Students</span></a>
+        <a href="teacher-remarks.html" class="nav-item"><span>💬</span> <span>AI Remarks</span></a>
+        <a href="teacher-exams.html" class="nav-item"><span>📝</span> <span>Exam Results</span></a>
+        <a href="teacher-attendance.html" class="nav-item"><span>✅</span> <span>Attendance</span></a>
+        <a href="teacher-assignments.html" class="nav-item"><span>📚</span> <span>Assignments</span></a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h2>👨‍🎓 My Students</h2>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        
+        <div class="card">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search student by name..." onkeyup="filterStudents()">
+                <select id="gradeFilter" onchange="filterStudents()">
+                    <option value="">All Grades/Forms</option>
+                    <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+                    <option>Form 3</option><option>Form 4</option>
+                </select>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>Adm No</th><th>Name</th><th>Grade/Form</th><th>Parent Contact</th><th>Actions</th></tr></thead>
+                    <tbody id="studentsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalStudentName">Student Details</h2>
+            <div id="modalDetails"></div>
+            <button onclick="closeModal()" style="margin-top:15px; padding:8px 20px; background:#8DB600; color:white; border:none; border-radius:5px;">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        let students = JSON.parse(localStorage.getItem('teacherStudents')) || [
+            { id: "DAW/2024/001", name: "James Mwangi", grade: "Grade 8", parent: "+254 712 345678", marks: { Math: 85, Science: 78, English: 82 } },
+            { id: "DAW/2024/002", name: "Brian Otieno", grade: "Grade 8", parent: "+254 723 456789", marks: { Math: 72, Science: 88, English: 79 } },
+            { id: "DAW/2024/003", name: "Alex Kimani", grade: "Form 3", parent: "+254 734 567890", marks: { Math: 91, Science: 85, English: 88 } },
+            { id: "DAW/2024/004", name: "Michael Omondi", grade: "Grade 7", parent: "+254 745 678901", marks: { Math: 68, Science: 75, English: 71 } }
+        ];
+        
+        function displayStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const grade = document.getElementById('gradeFilter').value;
+            const filtered = students.filter(s => 
+                (s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search)) &&
+                (grade === "" || s.grade === grade)
+            );
+            
+            const tbody = document.getElementById('studentsTable');
+            tbody.innerHTML = '';
+            filtered.forEach(s => {
+                tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.grade}</td><td>${s.parent}</td><td><button class="view-btn" onclick="viewStudent('${s.id}')">View</button></td></tr>`;
+            });
+        }
+        
+        function viewStudent(id) {
+            const student = students.find(s => s.id === id);
+            document.getElementById('modalStudentName').innerText = student.name;
+            let details = `<p><strong>Admission No:</strong> ${student.id}</p><p><strong>Grade/Form:</strong> ${student.grade}</p><p><strong>Parent Contact:</strong> ${student.parent}</p><h3 style="margin-top:15px; color:#8DB600">Marks</h3>`;
+            for(let [subject, mark] of Object.entries(student.marks)) {
+                details += `<p>${subject}: ${mark}%</p>`;
+            }
+            document.getElementById('modalDetails').innerHTML = details;
+            document.getElementById('studentModal').style.display = 'flex';
+        }
+        
+        function closeModal() { document.getElementById('studentModal').style.display = 'none'; }
+        function filterStudents() { displayStudents(); }
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+        
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const portal = localStorage.getItem('userPortal');
+            if (!isLoggedIn || portal !== 'teacher') window.location.href = 'index.html';
+        }
+        
+        window.onload = () => { checkLogin(); displayStudents(); };
+    </script>
+</body>
+</html>

@@ -109,7 +109,19 @@
                 <h2 class="form-title">🪪 Student Information</h2>
                 <div class="form-group"><label>Full Name</label><input type="text" id="studentName" placeholder="Student name"></div>
                 <div class="form-group"><label>Student ID</label><input type="text" id="studentId" placeholder="e.g., STU-2024-001"></div>
-                <div class="form-group"><label>Class/Grade</label><select id="class"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option></select></div>
+                <div class="form-group"><label>Grade/Form</label>
+                    <select id="class">
+                        <optgroup label="Grades">
+                            <option>Grade 7</option>
+                            <option>Grade 8</option>
+                            <option>Grade 9</option>
+                        </optgroup>
+                        <optgroup label="Forms">
+                            <option>Form 3</option>
+                            <option>Form 4</option>
+                        </optgroup>
+                    </select>
+                </div>
                 <div class="form-group"><label>Parent/Guardian</label><input type="text" id="parent" placeholder="Parent name"></div>
                 <div class="form-group"><label>Contact Number</label><input type="text" id="contact" placeholder="Phone number"></div>
                 <div class="form-group"><label>Blood Group</label><select id="bloodGroup"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
@@ -123,7 +135,7 @@
                     <div style="font-size: 11px;">Student ID Card</div>
                     <div class="student-details">
                         <p><strong>ID:</strong> <span id="displayId">------</span></p>
-                        <p><strong>Class:</strong> <span id="displayClass">------</span></p>
+                        <p><strong>Grade/Form:</strong> <span id="displayClass">------</span></p>
                         <p><strong>Parent:</strong> <span id="displayParent">------</span></p>
                         <p><strong>Contact:</strong> <span id="displayContact">------</span></p>
                         <p><strong>Blood:</strong> <span id="displayBlood">------</span></p>
@@ -143,7 +155,6 @@
             document.getElementById('displayBlood').innerText = document.getElementById('bloodGroup').value;
         }
         function printIDCard() { window.print(); }
-        // Load saved data if any
         if(localStorage.getItem('lastStudentId')) {
             document.getElementById('studentName').value = localStorage.getItem('lastStudentName') || '';
             document.getElementById('studentId').value = localStorage.getItem('lastStudentId') || '';

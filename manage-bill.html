@@ -1,3 +1,4 @@
+cat > manage-bill.html << 'EOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,15 +89,15 @@
     </div>
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-card"><h3>Total Collected</h3><div class="amount" id="totalCollected">$0</div></div>
-            <div class="stat-card"><h3>Pending Payments</h3><div class="amount" id="totalPending">$0</div></div>
+            <div class="stat-card"><h3>Total Collected</h3><div class="amount" id="totalCollected">KSh 0</div></div>
+            <div class="stat-card"><h3>Pending Payments</h3><div class="amount" id="totalPending">KSh 0</div></div>
             <div class="stat-card"><h3>Total Students</h3><div class="amount" id="totalStudents">0</div></div>
         </div>
         <div class="form-card">
             <h2 class="form-title">💰 Add Fee Record</h2>
             <div class="form-row">
                 <div class="form-group"><label>Student Name</label><input type="text" id="studentName" placeholder="Student name"></div>
-                <div class="form-group"><label>Amount ($)</label><input type="number" id="amount" placeholder="Amount"></div>
+                <div class="form-group"><label>Amount (KSh)</label><input type="number" id="amount" placeholder="Amount in KSh"></div>
                 <div class="form-group"><label>Due Date</label><input type="date" id="dueDate"></div>
                 <div class="form-group"><label>Status</label><select id="status"><option>Pending</option><option>Paid</option></select></div>
             </div>
@@ -105,15 +106,15 @@
         <div class="table-card">
             <h2 class="form-title">📋 Fee Records</h2>
             <table>
-                <thead><tr><th>Student</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+                <thead><tr><th>Student</th><th>Amount (KSh)</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
                 <tbody id="feeList"></tbody>
             </table>
         </div>
     </div>
     <script>
         let fees = JSON.parse(localStorage.getItem('fees')) || [
-            { student: "John Doe", amount: 500, dueDate: "2026-06-30", status: "Pending" },
-            { student: "Jane Smith", amount: 500, dueDate: "2026-06-15", status: "Paid" }
+            { student: "John Doe", amount: 5000, dueDate: "2026-06-30", status: "Pending" },
+            { student: "Jane Smith", amount: 5000, dueDate: "2026-06-15", status: "Paid" }
         ];
         function saveFees() { localStorage.setItem('fees', JSON.stringify(fees)); }
         function updateStats() {
@@ -122,15 +123,21 @@
                 if(fee.status === "Paid") total += fee.amount;
                 else pending += fee.amount;
             });
-            document.getElementById('totalCollected').innerText = `$${total}`;
-            document.getElementById('totalPending').innerText = `$${pending}`;
+            document.getElementById('totalCollected').innerText = `KSh ${total.toLocaleString()}`;
+            document.getElementById('totalPending').innerText = `KSh ${pending.toLocaleString()}`;
             document.getElementById('totalStudents').innerText = fees.length;
         }
         function displayFees() {
             const tbody = document.getElementById('feeList');
             tbody.innerHTML = '';
             fees.forEach((fee, i) => {
-                tbody.innerHTML += `<tr><td>${fee.student}</td><td>$${fee.amount}</td><td>${fee.dueDate}</td><td class="${fee.status === 'Paid' ? 'status-paid' : 'status-pending'}">${fee.status}</td><td>${fee.status === 'Pending' ? `<button class="pay-btn" onclick="markPaid(${i})">Mark Paid</button>` : '✓ Paid'}</td></tr>`;
+                tbody.innerHTML += `<tr>
+                    <td>${fee.student}</td>
+                    <td>KSh ${fee.amount.toLocaleString()}</td>
+                    <td>${fee.dueDate}</td>
+                    <td class="${fee.status === 'Paid' ? 'status-paid' : 'status-pending'}">${fee.status}</td>
+                    <td>${fee.status === 'Pending' ? `<button class="pay-btn" onclick="markPaid(${i})">Mark Paid</button>` : '✓ Paid'}</td>
+                </tr>`;
             });
             updateStats();
             saveFees();
@@ -153,3 +160,4 @@
     </script>
 </body>
 </html>
+EOF
